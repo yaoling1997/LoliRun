@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 if (msg.what==0x123){
                     loli.setRestCnt(loli.getRestCnt()+1);
+                    int x=loli.getStatus();
+                    if (x>0)
+                        loli.setStatus(x-1);
                     loli.invalidate();
                 }
                 super.handleMessage(msg);
@@ -36,12 +39,14 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 handler.sendEmptyMessage(0x123);
             }
-        },0,1000);
+        },0,150);
         loli.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 loli.setBitmapX(motionEvent.getX()-loli.getBitmapWidth()/2);
                 loli.setBitmapY(motionEvent.getY()-loli.getBitmapHeight()/2);
+                loli.setStatus(15);
+                loli.setWalkCnt(loli.getWalkCnt()+1);
                 loli.invalidate();
                 return true;
             }
