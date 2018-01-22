@@ -43,9 +43,16 @@ public class MainActivity extends AppCompatActivity {
         loli.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                loli.setBitmapX(motionEvent.getX()-loli.getBitmapWidth()/2);
-                loli.setBitmapY(motionEvent.getY()-loli.getBitmapHeight()/2);
-                loli.setStatus(15);
+                float deltaX,deltaY;
+                deltaX= motionEvent.getX()-loli.getBitmapX();
+                deltaY= motionEvent.getY()-loli.getBitmapY();
+                if (Math.abs(deltaX)>=Loli.moveDistance)
+                    deltaX= deltaX/Math.abs(deltaX)*Loli.moveDistance;
+                if (Math.abs(deltaY)>=Loli.moveDistance)
+                    deltaY= deltaY/Math.abs(deltaY)*Loli.moveDistance;
+                loli.setBitmapX(loli.getBitmapX()+deltaX);
+                loli.setBitmapY(loli.getBitmapY()+deltaY);
+                loli.setStatus(10);
                 loli.setWalkCnt(loli.getWalkCnt()+1);
                 loli.invalidate();
                 return true;

@@ -13,15 +13,17 @@ import android.view.WindowManager;
  */
 
 public class Loli extends View {
+    final static float moveDistance=(float)10;
     private Bitmap []bitmapWalk;
     private Bitmap []bitmapRest;
     private float bitmapWidth;
     private float bitmapHeight;
-    private float bitmapX;
-    private float bitmapY;
+    private float bitmapX;//图片底部中点x坐标
+    private float bitmapY;//图片底部中点y坐标
     private int walkCnt;//走路计数器，播放对应的图片
     private int restCnt;//休息计数器，播放对应的图片
     private int status;//state==0 rest,state>0 walk
+    private int slow;//用来减缓行走播放速度
     public Loli(Context context) {
         super(context);
         bitmapWalk= new Bitmap[5];
@@ -41,23 +43,24 @@ public class Loli extends View {
         WindowManager wm= (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         bitmapWidth=bitmapWalk[0].getWidth();
         bitmapHeight=bitmapWalk[0].getHeight();
-        bitmapX= wm.getDefaultDisplay().getWidth()/2-bitmapWidth/2;//初始坐标
-        bitmapY= wm.getDefaultDisplay().getHeight()/2-bitmapHeight/2;
+        bitmapX= wm.getDefaultDisplay().getWidth()/2;//初始坐标
+        bitmapY= wm.getDefaultDisplay().getHeight()/2;
         walkCnt =0;
         restCnt =0;
         status =0;
+        slow=10;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint paint=new Paint();
-        walkCnt =(walkCnt)%bitmapWalk.length;
+        walkCnt =(walkCnt)%(bitmapWalk.length*slow);
         restCnt=(restCnt)%bitmapRest.length;
         if (status>0)
-            canvas.drawBitmap(bitmapWalk[walkCnt],bitmapX,bitmapY,paint);
+            canvas.drawBitmap(bitmapWalk[walkCnt/slow],bitmapX-bitmapWidth/2,bitmapY-bitmapHeight,paint);
         else
-            canvas.drawBitmap(bitmapRest[restCnt],bitmapX,bitmapY,paint);
+            canvas.drawBitmap(bitmapRest[restCnt],bitmapX-bitmapWidth/2,bitmapY-bitmapHeight,paint);
     }
 
     public float getBitmapWidth() {
